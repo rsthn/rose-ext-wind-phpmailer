@@ -22,6 +22,7 @@ use Rose\Errors\ArgumentError;
 
 use Rose\Configuration;
 use Rose\Extensions;
+use Rose\Text;
 use Rose\Arry;
 use Rose\Expr;
 
@@ -41,6 +42,9 @@ Expr::register('mail::send', function ($args, $parts, $data)
 
 	if (!$config->secure)
 		$config->secure = $config->port == 587 ? 'explicit' : 'implicit';
+
+	$mail->XMailer = null;
+	$mail->CharSet = 'UTF-8';
 
 	$mail->Host = $config->host;
 	$mail->SMTPAuth = true;
@@ -85,6 +89,25 @@ Expr::register('mail::send', function ($args, $parts, $data)
 
 			case 'BODY':
 				$mail->msgHTML($args->get(++$i));
+				break;
+
+			case 'ATTACHMENT':
+				$value = $args->get(++$i);
+
+				if (\Rose\typeOf($value) == 'Rose\\Map')
+				{
+					if ($value->has('data'))
+					{
+						$mail->AddStringAttachment ($value->data, $value->name);
+					}
+					else if ($value->has('path'))
+					{
+						$mail->AddAttachment ($value->path, $value->name);
+					}
+				}
+				else
+					$mail->AddAttachment ($value);
+
 				break;
 		}
 	}

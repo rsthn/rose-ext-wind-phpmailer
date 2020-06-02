@@ -32,11 +32,15 @@ Accepts one or more name:value pairs, the name describes the field to set in the
 
 |Name|Type|Description|
 |----|----|-----------|
-|RCPT|`string` / `array`|Recipient (email) of the message.
+|RCPT|`string`|Email address of the recipient.
+|RCPT|`array`|Email addresses of the recipients.
 |FROM|`string`|Email of the sender.
 |FROM-NAME|`string`|Name of the sender.
 |SUBJECT|`string`|Subject of the message.
 |BODY|`string`|HTML contents of the message.
+|ATTACHMENT|`string`|Adds the specified file (path) as an attachment.
+|ATTACHMENT|`map { name, data }`|Adds an attachment from a given data string.
+|ATTACHMENT|`map { name, path }`|Adds an attachment from a given path.
 
 Example:
 
