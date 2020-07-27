@@ -60,7 +60,7 @@ Expr::register('mail::send', function ($args, $parts, $data)
 	{
 		switch (Text::toUpperCase($args->get($i)))
 		{
-			case 'RCPT':
+			case 'RCPT': case 'TO':
 				$value = $args->get(++$i);
 
 				if (\Rose\typeOf($value) == 'Rose\\Arry')
@@ -75,6 +75,16 @@ Expr::register('mail::send', function ($args, $parts, $data)
 
 				break;
 
+			case 'CC':
+				$tmp = trim($args->get(++$i));
+				if ($tmp) $mail->addCC($tmp);
+				break;
+
+			case 'BCC':
+				$tmp = trim($args->get(++$i));
+				if ($tmp) $mail->addBCC($tmp);
+				break;
+	
 			case 'FROM':
 				$mail->From = $args->get(++$i);
 				break;
