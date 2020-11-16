@@ -21,7 +21,7 @@ composer require rsthn/rose-ext-wind-phpmailer
 |port|`int`|Port number to connect.|587
 |secure|`explicit`,`implicit`|SMTP secure connection mode.|`explicit` if port is 587, `implicit` otherwise.
 |from|`string`|Email address of the sender.|SMTP server default.
-|fromName|`string`|Name of the sender.|Blank
+|from_name|`string`|Name of the sender.|Blank
 
 
 ## Expression Functions
