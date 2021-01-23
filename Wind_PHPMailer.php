@@ -29,7 +29,7 @@ use Rose\Expr;
 if (!Extensions::isInstalled('Wind'))
 	return;
 
-Expr::register('mail::send', function ($args, $parts, $data)
+$phpmailer_sendmail = function ($args, $parts, $data)
 {
 	$mail = new \PHPMailer\PHPMailer\PHPMailer (true);
 	$config = Configuration::getInstance()->Mail;
@@ -54,7 +54,7 @@ Expr::register('mail::send', function ($args, $parts, $data)
 	$mail->Port = $config->port;
 
 	$mail->From = $config->from;
-	$mail->FromName = $config->from_name;
+	$mail->FromName = $config->fromName;
 
 	for ($i = 1; $i < $args->length; $i++)
 	{
@@ -104,19 +104,41 @@ Expr::register('mail::send', function ($args, $parts, $data)
 			case 'ATTACHMENT':
 				$value = $args->get(++$i);
 
-				if (\Rose\typeOf($value) == 'Rose\\Map')
+				if (\Rose\typeOf($value) == 'Rose\\Arry')
 				{
-					if ($value->has('data'))
+					foreach ($value->__nativeArray as $value)
 					{
-						$mail->AddStringAttachment ($value->data, $value->name);
-					}
-					else if ($value->has('path'))
-					{
-						$mail->AddAttachment ($value->path, $value->name);
+						if (\Rose\typeOf($value) == 'Rose\\Map')
+						{
+							if ($value->has('data'))
+							{
+								$mail->AddStringAttachment ($value->data, $value->name);
+							}
+							else if ($value->has('path'))
+							{
+								$mail->AddAttachment ($value->path, $value->name);
+							}
+						}
+						else
+							$mail->AddAttachment ($value);
 					}
 				}
 				else
-					$mail->AddAttachment ($value);
+				{
+					if (\Rose\typeOf($value) == 'Rose\\Map')
+					{
+						if ($value->has('data'))
+						{
+							$mail->AddStringAttachment ($value->data, $value->name);
+						}
+						else if ($value->has('path'))
+						{
+							$mail->AddAttachment ($value->path, $value->name);
+						}
+					}
+					else
+						$mail->AddAttachment ($value);
+				}
 
 				break;
 		}
@@ -125,4 +147,7 @@ Expr::register('mail::send', function ($args, $parts, $data)
 	$mail->send();
 
 	return true;
-});
+};
+
+Expr::register('mail::send', $phpmailer_sendmail);
+Expr::register('phpmailer::send', $phpmailer_sendmail);

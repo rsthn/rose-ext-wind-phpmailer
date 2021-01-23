@@ -21,12 +21,13 @@ composer require rsthn/rose-ext-wind-phpmailer
 |port|`int`|Port number to connect.|587
 |secure|`explicit`,`implicit`|SMTP secure connection mode.|`explicit` if port is 587, `implicit` otherwise.
 |from|`string`|Email address of the sender.|SMTP server default.
-|from_name|`string`|Name of the sender.|Blank
+|fromName|`string`|Name of the sender.|Blank
 
 
 ## Expression Functions
 
 ### `mail::send` name:string value:string ...
+### `phpmailer::send` name:string value:string ...
 
 Accepts one or more name:value pairs, the name describes the field to set in the `mail` object of PHPMailer. Currently supported:
 
@@ -41,6 +42,7 @@ Accepts one or more name:value pairs, the name describes the field to set in the
 |ATTACHMENT|`string`|Adds the specified file (path) as an attachment.
 |ATTACHMENT|`map { name, data }`|Adds an attachment from a given data string.
 |ATTACHMENT|`map { name, path }`|Adds an attachment from a given path.
+|ATTACHMENT|`array`|Adds one or more attachments (each of which can be any of the previous forms).
 
 Example:
 
