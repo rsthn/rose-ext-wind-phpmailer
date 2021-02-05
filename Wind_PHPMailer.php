@@ -103,11 +103,14 @@ $phpmailer_sendmail = function ($args, $parts, $data)
 
 			case 'ATTACHMENT':
 				$value = $args->get(++$i);
+				if (!$value) break;
 
 				if (\Rose\typeOf($value) == 'Rose\\Arry')
 				{
 					foreach ($value->__nativeArray as $value)
 					{
+						if (!$value) continue;
+
 						if (\Rose\typeOf($value) == 'Rose\\Map')
 						{
 							if ($value->has('data'))
