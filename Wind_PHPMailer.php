@@ -40,7 +40,7 @@ $phpmailer_sendmail = function ($args, $parts, $data)
 	if (!$config->port)
 		$config->port = 587;
 
-	if (!$config->secure)
+	if (!$config->secure || $config->secure == 'true')
 		$config->secure = $config->port == 587 ? 'explicit' : 'implicit';
 
 	$mail->XMailer = null;
@@ -48,7 +48,7 @@ $phpmailer_sendmail = function ($args, $parts, $data)
 
 	$mail->Host = $config->host;
 	$mail->SMTPAuth = true;
-	$mail->SMTPSecure = $config->secure == 'implicit' ? 'ssl' : 'tls';
+	$mail->SMTPSecure = $config->secure == 'implicit' ? 'ssl' : ($config->secure == 'explicit' ? 'tls' : '');
 	$mail->Username = $config->username;
 	$mail->Password = $config->password;
 	$mail->Port = $config->port;
@@ -56,6 +56,26 @@ $phpmailer_sendmail = function ($args, $parts, $data)
 	$mail->From = $config->from;
 	$mail->FromName = $config->fromName;
 
+	if ($config->secure == 'false')
+		$mail->SMTPAutoTLS = false;
+
+	/*
+	**	Do not set `unchecked` to `true` unless absolutely necessary. Because SSL security checks will be disabled.
+	*/
+	if ($config->unchecked == 'true')
+	{
+		$mail->SMTPOptions = array(
+			'ssl' => array(
+				'verify_peer' => false,
+				'verify_peer_name' => false,
+				'allow_self_signed' => true
+			)
+		);
+	}
+
+	/*
+	**	Process each argument in the input map.
+	*/
 	for ($i = 1; $i < $args->length; $i++)
 	{
 		switch (Text::toUpperCase($args->get($i)))
@@ -93,6 +113,10 @@ $phpmailer_sendmail = function ($args, $parts, $data)
 				$mail->FromName = $args->get(++$i);
 				break;
 
+			case 'REPLY-TO':
+				$mail->addReplyTo($args->get(++$i));
+				break;
+	
 			case 'SUBJECT':
 				$mail->Subject = $args->get(++$i);
 				break;
