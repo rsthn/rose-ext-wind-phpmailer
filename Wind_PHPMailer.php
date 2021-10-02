@@ -85,13 +85,16 @@ $phpmailer_sendmail = function ($args, $parts, $data)
 
 				if (\Rose\typeOf($value) == 'Rose\\Arry')
 				{
-					$value->forEach(function($value) use(&$mail) {
-						\Rose\trace('ADDING:'.$value);
-						$mail->addAddress($value);
+					$value->forEach(function($value) use(&$mail)
+					{
+						$value = trim($value);
+						if ($value) $mail->addAddress($value);
 					});
 				}
-				else
-					$mail->addAddress($value);
+				else {
+					$value = trim($value);
+					if ($value) $mail->addAddress($value);
+				}
 
 				break;
 
