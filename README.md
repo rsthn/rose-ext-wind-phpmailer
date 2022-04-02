@@ -13,15 +13,15 @@ composer require rsthn/rose-ext-wind-phpmailer
 ## Configuration Section: `Mail`
 
 
-|Field|Type|Description|Default|
+|Field|Type|Name|Description|
 |----|----|-----------|-------|
 |host|`string`|SMTP host name.|Required
 |username|`string`|Username for the SMTP server.|Required
 |password|`string`|Password for the SMTP server.|Required
-|port|`int`|Port number to connect.|587
-|secure|`explicit`,`implicit`|SMTP secure connection mode.|`explicit` if port is 587, `implicit` otherwise.
-|from|`string`|Email address of the sender.|SMTP server default.
-|fromName|`string`|Name of the sender.|Blank
+|port|`int`|Port number to connect.|Default is port `587`.
+|secure|`boolean`, `string`|SMTP secure connection mode.|Default is `true`.<br/>Use `explicit` if port is 587, `implicit` otherwise.<br/>Set to `false` to disable and to `true` to use automatic detection based on port number.
+|from|`string`|Email address of the sender.|Optional
+|fromName|`string`|Name of the sender.|Optional
 
 
 ## Expression Functions
